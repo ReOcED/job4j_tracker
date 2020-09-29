@@ -11,27 +11,22 @@ public class StartUI {
             boolean success = false;
             int select = input.askInt("Выбор пункта меню");
             if (select == 1) {
-                for (Item i : tracker.findAll()) {
+                for (Item i : StartUI.showAll(input, tracker)) {
                     System.out.println(i);
                 }
                 success = true;
             } else if (select == 2) {
-                Item item = tracker.findById(input.askStr("Введите id"));
-                if (item != null) {
-                    item.setName(input.askStr("Введите новое имя"));
-                    tracker.replace(item.getId(), item);
-                    success = true;
-                }
+                success = StartUI.editItem(input, tracker);
             } else if (select == 3) {
-                success = tracker.delete(input.askStr("Введите id"));
+                success = StartUI.deleteItem(input, tracker);
             } else if (select == 4) {
-                Item item = tracker.findById(input.askStr("Введите id"));
+                Item item = StartUI.findById(input, tracker);
                 if (item != null) {
                     System.out.println(item);
                     success = true;
                 }
             } else if (select == 5) {
-                Item [] items = tracker.findByName(input.askStr("Введите имя"));
+                Item [] items = StartUI.findByName(input, tracker);
                 if(items.length > 0) {
                     success = true;
                     for (Item i : items) {
@@ -47,6 +42,37 @@ public class StartUI {
             }
         }
     }
+
+    public static void createItem(Input input, Tracker tracker) {
+        tracker.add(new Item(input.askStr("Введите имя")));
+    }
+
+    public static Item[] showAll(Input input, Tracker tracker) {
+        return tracker.findAll();
+    }
+
+    public static boolean editItem(Input input, Tracker tracker) {
+        boolean result = false;
+        String id = input.askStr("Enter id");
+        Item item = tracker.findById(id);
+        if (item != null) {
+            item.setName(input.askStr("Enter new name"));
+            result = tracker.replace(id, item);
+        }
+        return result;
+    }
+    public static boolean deleteItem(Input input, Tracker tracker) {
+        return tracker.delete(input.askStr("Enter id"));
+    }
+
+    public static Item findById(Input input, Tracker tracker) {
+        return tracker.findById(input.askStr("Enter id"));
+    }
+
+    public static Item[] findByName(Input input, Tracker tracker) {
+        return tracker.findByName(input.askStr("Enter name"));
+    }
+
 
     private void showMenu() {
 
