@@ -4,39 +4,34 @@ import java.util.Scanner;
 
 public class StartUI {
 
-    public void init(Scanner scanner, Tracker tracker) {
+    public void init(Input input, Tracker tracker) {
         boolean run = true;
         while (run) {
             this.showMenu();
             boolean success = false;
-            int select = Integer.parseInt(scanner.nextLine());
+            int select = input.askInt("Выбор пункта меню");
             if (select == 1) {
                 for (Item i : tracker.findAll()) {
                     System.out.println(i);
                 }
                 success = true;
             } else if (select == 2) {
-                System.out.println("Введите id");
-                Item item = tracker.findById((scanner.nextLine()));
+                Item item = tracker.findById(input.askStr("Введите id"));
                 if (item != null) {
-                    System.out.println("Введите новое имя");
-                    item.setName(scanner.nextLine());
+                    item.setName(input.askStr("Введите новое имя"));
                     tracker.replace(item.getId(), item);
                     success = true;
                 }
             } else if (select == 3) {
-                System.out.println("Введите id");
-                success = tracker.delete((scanner.nextLine()));
+                success = tracker.delete(input.askStr("Введите id"));
             } else if (select == 4) {
-                System.out.println("Введите id");
-                Item item = tracker.findById((scanner.nextLine()));
+                Item item = tracker.findById(input.askStr("Введите id"));
                 if (item != null) {
                     System.out.println(item);
                     success = true;
                 }
             } else if (select == 5) {
-                System.out.println("Введите имя");
-                Item [] items = tracker.findByName((scanner.nextLine()));
+                Item [] items = tracker.findByName(input.askStr("Введите имя"));
                 if(items.length > 0) {
                     success = true;
                     for (Item i : items) {
@@ -67,10 +62,11 @@ public class StartUI {
 
 
     public static void main(String[] args) {
+        Input input = new ConsoleInput();
         Scanner scanner = new Scanner(System.in);
         Tracker tracker = new Tracker();
         tracker.add(new Item("name"));
         tracker.add(new Item("name1"));
-        new StartUI().init(scanner, tracker);
+        new StartUI().init(input, tracker);
     }
 }
