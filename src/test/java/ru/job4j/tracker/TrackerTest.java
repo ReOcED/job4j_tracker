@@ -2,8 +2,8 @@ package ru.job4j.tracker;
 
 import org.junit.Test;
 import ru.job4j.tracker.actions.*;
-import ru.job4j.tracker.inputs.Input;
-import ru.job4j.tracker.inputs.StubInput;
+import ru.job4j.tracker.io.Input;
+import ru.job4j.tracker.io.StubInput;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.is;

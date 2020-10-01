@@ -1,8 +1,9 @@
 package ru.job4j.tracker;
 
 import ru.job4j.tracker.actions.*;
-import ru.job4j.tracker.inputs.ConsoleInput;
-import ru.job4j.tracker.inputs.Input;
+import ru.job4j.tracker.io.ConsoleInput;
+import ru.job4j.tracker.io.Input;
+import ru.job4j.tracker.io.ValidateInput;
 
 import java.util.Scanner;
 
@@ -12,7 +13,11 @@ public class StartUI {
         boolean run = true;
         while (run) {
             this.showMenu(actions);
-            run = actions[input.askInt("Введите пункт меню")].execute(input, tracker);
+            int item = -1;
+            while (item < 0 || item >= actions.length) {
+                item = input.askInt("Choose valid menu item");
+            }
+            run = actions[item].execute(input, tracker);
         }
     }
 
@@ -25,7 +30,7 @@ public class StartUI {
 
 
     public static void main(String[] args) {
-        Input input = new ConsoleInput();
+        Input input = new ValidateInput();
         Scanner scanner = new Scanner(System.in);
         Tracker tracker = new Tracker();
         tracker.add(new Item("name"));
