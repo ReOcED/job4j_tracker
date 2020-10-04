@@ -1,9 +1,7 @@
 package ru.job4j.tracker;
 
 import ru.job4j.tracker.actions.*;
-import ru.job4j.tracker.io.ConsoleInput;
-import ru.job4j.tracker.io.Input;
-import ru.job4j.tracker.io.ValidateInput;
+import ru.job4j.tracker.io.*;
 
 import java.util.Scanner;
 
@@ -30,8 +28,7 @@ public class StartUI {
 
 
     public static void main(String[] args) {
-        Input input = new ValidateInput();
-        Scanner scanner = new Scanner(System.in);
+        Input input = new ValidateInput(new ConsoleInput());
         Tracker tracker = new Tracker();
         tracker.add(new Item("name"));
         tracker.add(new Item("name1"));
