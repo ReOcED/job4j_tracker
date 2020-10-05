@@ -1,15 +1,17 @@
 package ru.job4j.tracker;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Tracker {
-    private final Item[] items = new Item[100];
+    private final ArrayList<Item> items = new ArrayList<>();
     private int ids = 1;
     private int size = 0;
 
     public Item add(Item item) {
-        item.setId(generateId());
-        items[size++] = item;
+        item.setId(this.generateId());
+        items.add(item);
+        size++;
         return item;
     }
 
@@ -19,53 +21,41 @@ public class Tracker {
 
     private int indexOf(String id) {
         int result = -1;
-        for (int index = 0; index < size; index++) {
-            if (items[index].getId().equals(id)) {
+        int index = 0;
+        for (Item i : items) {
+            if (i.getId().equals(id)) {
                 result = index;
                 break;
             }
+            index++;
         }
         return result;
     }
 
     public Item findById(String id) {
         int index = this.indexOf(id);
-        return index < 0 ? null : this.items[index];
+        return index < 0 ? null : this.items.get(index);
     }
 
     public boolean replace(String id, Item item) {
-        boolean rsl = false;
         int index = this.indexOf(id);
-        if (index >= 0) {
-            item.setId(this.items[index].getId());
-            this.items[index] = item;
-            rsl = true;
+        if (index != -1) {
+            this.items.set(index, item);
         }
-        return rsl;
+        return index != -1;
     }
 
     public boolean delete(String id) {
-        boolean rsl = false;
-        int index = this.indexOf(id);
-        if (index != -1) {
-            this.items[index] = this.items[--size];
-            rsl = true;
-        }
-        return rsl;
+        return this.items.removeIf(item -> item.getId().equals(id));
     }
 
-    public Item[] findByName(String key) {
-        Item[] result = new Item[this.size];
-        int rslSize = 0;
-        for (int i = 0; i < size; i++) {
-            if (items[i].getName().equals(key)) {
-                result[rslSize++] = items[i];
-            }
-        }
-        return Arrays.copyOf(result, rslSize);
+    public ArrayList<Item> findByName(String key) {
+        return new ArrayList<Item>(items.stream().filter(item -> item.getName().contains(key)).collect(Collectors.toList()));
+
     }
 
-    public Item[] findAll() {
-        return Arrays.copyOf(this.items, size);
+    public ArrayList<Item> findAll() {
+        return new ArrayList<Item>(this.items);
     }
+
 }
