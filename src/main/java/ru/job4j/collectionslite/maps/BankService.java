@@ -5,38 +5,34 @@ import java.util.*;
 public class BankService {
 
 
-    private Map<User, List<Account>> users = new HashMap<>();
+    private final Map<User, List<Account>> users = new HashMap<>();
 
     public void addUser(User user) {
         users.putIfAbsent(user, new ArrayList<>());
     }
 
     public void addAccount(String passport, Account account) {
-        List<Account> u = this.users.get(this.findByPassport(passport));
-        if (u != null && !u.contains(account)) {
-            u.add(account);
+        Optional<User> u = this.findByPassport(passport);
+        if (u.isPresent()) {
+            List<Account> accs = this.users.get(u.get());
+            if (accs != null && !accs.contains(account)) {
+                accs.add(account);
+            }
         }
     }
 
-    public User findByPassport(String passport) {
-        for (User u : users.keySet()) {
-            if (u.getPassport().equals(passport)) {
-                return u;
-            }
-        }
-        return null;
+    public Optional<User> findByPassport(String passport) {
+        return users.keySet().stream()
+                .filter(u -> u.getPassport().equals(passport))
+                .findFirst();
+
     }
 
     public Account findByRequisite(String passport, String requisite) {
-        User u = this.findByPassport(passport);
-        if (u != null) {
-            for (Account a : users.get(u)) {
-                if (a.getRequisite().equals(requisite)) {
-                    return a;
-                }
-            }
-        }
-        return null;
+        return this.findByPassport(passport)
+                .flatMap(user -> this.users.get(user).stream()
+                .filter(acc -> acc.getRequisite().equals(requisite))
+                .findFirst()).orElse(null);
     }
 
     public boolean transferMoney(String srcPassport, String srcRequisite,

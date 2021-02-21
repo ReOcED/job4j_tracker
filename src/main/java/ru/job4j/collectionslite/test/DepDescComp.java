@@ -12,7 +12,7 @@ public class DepDescComp implements Comparator<String> {
         List<String> deps2 = Arrays.asList(o2.split("/"));
         int rsl = deps2.get(0).compareTo(deps1.get(0));
         int i = 1;
-        while (rsl == 0 && i < deps1.size() && i < deps2.size() ) {
+        while (rsl == 0 && i < deps1.size() && i < deps2.size()) {
             rsl = deps1.get(i).compareTo(deps2.get(i));
             i++;
         }
